@@ -1,7 +1,7 @@
 // Fast network always
 // slow initial load
 // show loading quickly on initial load, don't show top level placeholder on navigation
-import React from "react";
+import React, { createContext } from "react";
 import { Router, Link, Redirect, globalHistory } from "@reach/router";
 import {
   login,
@@ -9,25 +9,24 @@ import {
   getContact,
   createContact,
   updateContact,
-  deleteContact
+  deleteContact,
 } from "./utils";
-import createContext from "create-react-context";
 
 globalHistory.listen(({ location, action }) => {
   console.log({ location, action });
 });
 
 const InvalidateContacts = createContext();
-const withInvalidateContacts = Comp => props => (
+const withInvalidateContacts = (Comp) => (props) => (
   <InvalidateContacts.Consumer>
-    {invalidate => <Comp {...props} invalidateContacts={invalidate} />}
+    {(invalidate) => <Comp {...props} invalidateContacts={invalidate} />}
   </InvalidateContacts.Consumer>
 );
 
-const NavLink = props => (
+const NavLink = (props) => (
   <Link
     getProps={({ isPartiallyCurrent }) => ({
-      className: isPartiallyCurrent ? "nav-link active" : "nav-link"
+      className: isPartiallyCurrent ? "nav-link active" : "nav-link",
     })}
     {...props}
   />
@@ -60,7 +59,7 @@ class Contacts extends React.Component {
             <NavLink to="contact/new">
               <span aria-label="add">+ New Contact</span>
             </NavLink>
-            {contacts.map(contact => (
+            {contacts.map((contact) => (
               <NavLink key={contact.id} to={`contact/${contact.id}`}>
                 {contact.first} {contact.last}
               </NavLink>
@@ -96,7 +95,7 @@ const Card = withInvalidateContacts(
       }
     }
 
-    handleSubmit = async event => {
+    handleSubmit = async (event) => {
       event.preventDefault();
       const [first, last] = event.target.elements;
       const { id } = this.props;
@@ -137,7 +136,7 @@ const Card = withInvalidateContacts(
                 <label>
                   First Name:{" "}
                   <input
-                    ref={n => (this.firstInput = n)}
+                    ref={(n) => (this.firstInput = n)}
                     type="text"
                     size="15"
                     defaultValue={contact.first}
@@ -200,17 +199,17 @@ const Field = ({ title }) => (
 const CreateStates = {
   IDLE: 0,
   SAVING: 1,
-  ERROR: 2
+  ERROR: 2,
 };
 
 const Create = withInvalidateContacts(
   class extends React.Component {
     state = {
       state: CreateStates.IDLE,
-      error: null
+      error: null,
     };
 
-    handleSubmit = async event => {
+    handleSubmit = async (event) => {
       event.preventDefault();
       this.setState(() => ({ state: CreateStates.SAVING }));
       const form = event.target;
@@ -218,9 +217,7 @@ const Create = withInvalidateContacts(
         first: form.elements[0].value || "Noname",
         last: form.elements[1].value || "McGee",
         avatar: form.elements[2].value || MONKEY,
-        id: Math.random()
-          .toString(32)
-          .substr(2, 8)
+        id: Math.random().toString(32).substr(2, 8),
       };
       const res = await createContact(contact);
       if (res.contact) {
@@ -230,7 +227,7 @@ const Create = withInvalidateContacts(
         const text = await res.text();
         this.setState({
           error: text,
-          state: CreateStates.ERROR
+          state: CreateStates.ERROR,
         });
       }
     };
@@ -274,7 +271,7 @@ const Error = () => <p>Sorry, something's wrong on the server.</p>;
 
 class App extends React.Component {
   state = {
-    loggedIn: false
+    loggedIn: false,
   };
 
   async componentDidMount() {
