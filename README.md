@@ -1,3 +1,5 @@
+<h1 align="center">THIS IS A FORK TO BE COMPATIBLE WITH REACT 17</h1>
+
 <p align="center">
   <a href="https://reach.tech/router/">
     <img alt="Reach Router" src="./logo-horizontal.png" width="400">
