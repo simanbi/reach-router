@@ -15,14 +15,9 @@ let getLocation = source => {
     const url = new URL(href);
     pathname = url.pathname;
   }
-  
-  const encodedPathname = pathname
-  .split("/")
-  .map(pathPart => encodeURIComponent(decodeURIComponent(pathPart)))
-  .join("/");
 
   return {
-    pathname: encodedPathname,
+    pathname: encodeURI(decodeURI(pathname)),
     search,
     hash,
     href,
